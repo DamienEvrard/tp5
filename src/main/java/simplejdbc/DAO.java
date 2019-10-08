@@ -79,8 +79,20 @@ public class DAO {
 	 * @return le nombre de bons de commande pour ce client (table PURCHASE_ORDER)
 	 * @throws DAOException
 	 */
-	public int numberOfOrdersForCustomer(int customerId) throws DAOException {
-		throw new UnsupportedOperationException("Pas encore implémenté");
+	public int numberOfOrdersForCustomer(int customerId) {
+		// Une requête SQL paramétrée
+		String sql = "Select count * FROM CUSTOMER WHERE CUSTOMER_ID = ?";
+		try (Connection connection = myDataSource.getConnection();
+			PreparedStatement stmt = connection.prepareStatement(sql)) {
+			// Définir la valeur du paramètre
+			stmt.setInt(1, customerId);
+
+			return stmt.executeUpdate();
+
+		} catch (SQLException ex) {
+			Logger.getLogger("DAO").log(Level.SEVERE, null, ex);
+			throw new DAOException(ex.getMessage());
+		}
 	}
 
 	/**
